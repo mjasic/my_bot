@@ -44,7 +44,7 @@ def generate_launch_description():
         PythonLaunchDescriptionSource(
             os.path.join(pkg_share, 'launch', 'rsp.launch.py')
         ),
-        launch_arguments={'use_sim_time': 'true'}.items()
+        launch_arguments={'use_sim_time': 'true', 'sim_mode': 'true'}.items()
     )
 
 # =========================
@@ -86,7 +86,7 @@ def generate_launch_description():
             'bash',
             '-c',
             f'''
-            xacro {pkg_share}/description/robot.urdf.xacro > /tmp/robot.urdf &&
+            xacro {pkg_share}/description/robot.urdf.xacro sim_mode:=true > /tmp/robot.urdf &&
             gz sdf -p /tmp/robot.urdf > /tmp/robot.sdf &&
             gz service -s /world/empty/create \
               --reqtype gz.msgs.EntityFactory \
