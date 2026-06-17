@@ -64,7 +64,7 @@
             </ray>
 
             <always_on>true</always_on>
-            <visualize>false</visualize>
+            <visualize>true</visualize>
 
         </sensor>
 

@@ -27,7 +27,10 @@
                     <param name="max">10</param>
                 </command_interface>
                 <state_interface name="position"/>
+<<<<<<< HEAD
                 <state_interface name="velocity"/>
+=======
+>>>>>>> 6742c9e (Initial commit)
             </joint>
         </ros2_control>
     </xacro:unless>
