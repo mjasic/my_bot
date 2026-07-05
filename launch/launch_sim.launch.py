@@ -84,12 +84,21 @@ def generate_launch_description():
             '/tf@tf2_msgs/msg/TFMessage@gz.msgs.Pose_V',
             '/scan@sensor_msgs/msg/LaserScan@gz.msgs.LaserScan',
             '/world/empty/model/robot/joint_state@sensor_msgs/msg/JointState@gz.msgs.Model',
-            '/world/empty/model/robot/link/base_link/sensor/camera/image@sensor_msgs/msg/Image@gz.msgs.Image',
-            '/world/empty/model/robot/link/base_link/sensor/camera/camera_info@sensor_msgs/msg/CameraInfo@gz.msgs.CameraInfo',
+            '/camera/camera_info@sensor_msgs/msg/CameraInfo[gz.msgs.CameraInfo',
         ],
         remappings=[
             ('/world/empty/model/robot/joint_state', '/joint_states')
         ],
+        output='screen'
+    )
+
+    # =========================
+    # IMAGE BRIDGE (GZ -> ROS image topic)
+    # =========================
+    image_bridge = Node(
+        package='ros_gz_image',
+        executable='image_bridge',
+        arguments=['/camera/image_raw'],
         output='screen'
     )
 
@@ -145,6 +154,7 @@ def generate_launch_description():
         joystick,
         twist_mux,
         bridge,
+        image_bridge,
         delayed_spawn,
         delayed_controllers
     ])

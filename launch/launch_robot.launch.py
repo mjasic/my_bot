@@ -59,4 +59,3 @@ def generate_launch_description():
         delayed_diff_drive_spawner,
         delayed_joint_broad_spawner
     ])
-    ])
