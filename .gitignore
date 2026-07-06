@@ -5,3 +5,4 @@ log/
 *.pdf
 *.gv
 *.pdf
+**/__pycache__/
