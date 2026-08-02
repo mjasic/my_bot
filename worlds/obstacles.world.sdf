@@ -8,15 +8,10 @@
     <plugin name='gz::sim::systems::Physics' filename='gz-sim-physics-system'/>
     <plugin name='gz::sim::systems::UserCommands' filename='gz-sim-user-commands-system'/>
     <plugin name='gz::sim::systems::SceneBroadcaster' filename='gz-sim-scene-broadcaster-system'/>
-    <plugin
-      filename='gz-sim-sensors-system'
-    name='gz::sim::systems::Sensors'>
-    <render_engine>ogre2</render_engine>
-</plugin>
-
-<plugin name='gz::sim::systems::Contact' filename='gz-sim-contact-system'/>
-    
-    
+    <plugin name='gz::sim::systems::Sensors' filename='gz-sim-sensors-system'>
+      <render_engine>ogre2</render_engine>
+    </plugin>
+    <plugin name='gz::sim::systems::Contact' filename='gz-sim-contact-system'/>
     <gravity>0 0 -9.8000000000000007</gravity>
     <magnetic_field>5.5644999999999998e-06 2.2875799999999999e-05 -4.2388400000000002e-05</magnetic_field>
     <atmosphere type='adiabatic'/>
@@ -75,7 +70,7 @@
       <self_collide>false</self_collide>
     </model>
     <model name='box'>
-      <pose>0.59683469481473606 2.0342790111305451 0.49999999019994013 9.0160605531308192e-13 1.9599694328218297e-08 -3.9297540149924299e-06</pose>
+      <pose>0.70249341488074946 2.0342788880182017 0.49999999019962521 2.2831235890775267e-13 1.3291830086878675e-08 -1.6484008130164443e-05</pose>
       <link name='box_link'>
         <inertial>
           <inertia>
@@ -122,7 +117,7 @@
       <self_collide>false</self_collide>
     </model>
     <model name='cone'>
-      <pose>-2.4239745779325585 -0.77638091774816576 0.49999999993296756 5.2548544155140844e-17 -7.7132841038066057e-10 -1.848369177196814e-23</pose>
+      <pose>-2.4239745779675124 -0.77638091774929319 0.49999999992120586 2.2548609768685022e-12 -8.4123610006180588e-10 1.6327758718180647e-17</pose>
       <link name='cone_link'>
         <inertial>
           <inertia>
@@ -171,7 +166,7 @@
       <self_collide>false</self_collide>
     </model>
     <model name='cylinder'>
-      <pose>2.9429820622468927 -1.6796874806084696 0.49999942638036005 -4.9870124606070437e-20 1.2141282358281104e-19 1.4671111342508256e-20</pose>
+      <pose>2.9429820622468927 -1.6796874806084696 0.49999943207967634 -4.8342562789561184e-20 1.2368419438548009e-19 1.5065708418006094e-20</pose>
       <link name='cylinder_link'>
         <inertial>
           <inertia>
@@ -220,7 +215,7 @@
       <self_collide>false</self_collide>
     </model>
     <model name='box_0'>
-      <pose>-0.23821037327509897 2.4181633216138221 0.4999999901996246 -6.8196830194789574e-13 -1.9598927180525729e-08 -3.498059205133803e-06</pose>
+      <pose>-0.29750062835715751 2.4181635868902069 0.4999999902000789 -1.1346241772207946e-12 -1.3595813388252879e-08 -1.470869142490252e-05</pose>
       <link name='box_link'>
         <inertial>
           <inertia>
@@ -266,6 +261,58 @@
       <static>false</static>
       <self_collide>false</self_collide>
     </model>
+    <model name='box_1'>
+      <pose>2.3028098566215651 0.18643753678263805 0.49999999019962588 2.2579684551365845e-13 3.2297873687784271e-09 -1.3867049713568479e-08</pose>
+      <link name='box_link'>
+        <inertial>
+          <inertia>
+            <ixx>0.16666</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>0.16666</iyy>
+            <iyz>0</iyz>
+            <izz>0.16666</izz>
+          </inertia>
+          <mass>1</mass>
+          <pose>0 0 0 0 0 0</pose>
+        </inertial>
+        <collision name='box_collision'>
+          <geometry>
+            <box>
+              <size>1 1 1</size>
+            </box>
+          </geometry>
+          <surface>
+            <friction>
+              <ode/>
+            </friction>
+            <bounce/>
+            <contact/>
+          </surface>
+        </collision>
+        <visual name='box_visual'>
+          <geometry>
+            <box>
+              <size>1 1 1</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>0.300000012 0.300000012 0.300000012 1</ambient>
+            <diffuse>0.699999988 0.699999988 0.699999988 1</diffuse>
+            <specular>1 1 1 1</specular>
+          </material>
+        </visual>
+        <pose>0 0 0 0 0 0</pose>
+        <enable_wind>false</enable_wind>
+      </link>
+      <static>false</static>
+      <self_collide>false</self_collide>
+    </model>
+    <include>
+      <uri>file:///home/mjasic/dev_ws/src/my_bot/models/apriltag_36h11_0</uri>
+      <name>apriltag_36h11_0</name>
+      <pose>1.8 0.20000000000000001 0.14999999999999999 0 0 0</pose>
+    </include>
     <light name='sun' type='directional'>
       <pose>0 0 10 0 0 0</pose>
       <cast_shadows>true</cast_shadows>
