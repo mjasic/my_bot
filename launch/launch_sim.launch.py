@@ -197,7 +197,6 @@ def generate_launch_description():
         gazebo,
         rsp,
         joystick,
-        twist_mux,
         bridge,
         image_bridge,
         delayed_spawn,

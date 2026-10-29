@@ -4,11 +4,11 @@ twist_mux:
     output: /diff_cont/cmd_vel
     topics:
       navigation:
-        topic: /cmd_vel_nav
+        topic: /cmd_vel
         timeout: 0.5
         priority: 10
       docking:
-        topic: /cmd_vel
+        topic: /cmd_vel_docking
         timeout: 0.5
         priority: 50
       joystick:
