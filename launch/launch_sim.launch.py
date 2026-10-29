@@ -103,6 +103,51 @@ def generate_launch_description():
     )
 
     # =========================
+    # APRILTAG NODE (sim — camera_node not needed, Gazebo publishes image+info)
+    # =========================
+    apriltag_node = Node(
+        package='apriltag_ros',
+        executable='apriltag_node',
+        name='apriltag_node',
+        parameters=[
+            os.path.join(pkg_share, 'config', 'apriltag.yaml'),
+            {'use_sim_time': True}
+        ],
+        remappings=[
+            ('image_rect', '/camera/image_raw'),
+            ('camera_info', '/camera/camera_info'),
+        ],
+        output='screen'
+    )
+
+    delayed_apriltag = TimerAction(
+        period=8.0,
+        actions=[apriltag_node]
+    )
+
+    # =========================
+    # DETECTED DOCK POSE PUBLISHER
+    # (bridges TF camera_link_optical -> dock_tag into detected_dock_pose
+    #  topic, ktorego oczekuje SimpleChargingDock w docking_server)
+    # =========================
+    dock_pose_publisher = Node(
+        package='my_bot',
+        executable='detected_dock_pose_publisher.py',
+        name='detected_dock_pose_publisher',
+        parameters=[{
+            'use_sim_time': True,
+            'camera_frame': 'camera_link_optical',
+            'tag_frame': 'dock_tag',
+        }],
+        output='screen'
+    )
+
+    delayed_dock_pose_publisher = TimerAction(
+        period=9.0,
+        actions=[dock_pose_publisher]
+    )
+
+    # =========================
     # SPAWN ROBOT
     # =========================
     spawn_robot = ExecuteProcess(
@@ -156,5 +201,7 @@ def generate_launch_description():
         bridge,
         image_bridge,
         delayed_spawn,
-        delayed_controllers
+        delayed_controllers,
+        delayed_apriltag,
+        delayed_dock_pose_publisher
     ])

@@ -1,10 +1,14 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+    <!-- ===== Raspberry Pi Camera 3 na przodzie podwozia (przod = x +0.265), wysokosc srodka podwozia ===== -->
+
     <joint name="camera_joint" type="fixed">
-        <parent link="chassis"/>
+        <parent link="base_link"/>
         <child link="camera_link"/>
-        <origin xyz="0.305 0 0.08" rpy="0 0 0"/>
+        <origin xyz="0.270 0 0.060" rpy="0 0 0"/>
     </joint>
+
     <link name="camera_link">
         <visual>
             <geometry>
@@ -13,22 +17,24 @@
             <material name="red"/>
         </visual>
     </link>
+
     <joint name="camera_optical_joint" type="fixed">
         <parent link="camera_link"/>
         <child link="camera_link_optical"/>
         <origin xyz="0 0 0" rpy="${-pi/2} 0 ${-pi/2}"/>
     </joint>
+
     <link name="camera_link_optical"></link>
 
     <gazebo reference="camera_link">
-        <material>Gazebo/Red</material>
         <sensor name="camera" type="camera">
             <pose>0 0 0 0 0 0</pose>
             <visualize>true</visualize>
             <update_rate>10</update_rate>
             <topic>camera/image_raw</topic>
             <camera>
-                <horizontal_fov>1.089</horizontal_fov>
+                <!-- Pi Camera 3 (standard) - ok. 66 stopni poziomo = 1.152 rad -->
+                <horizontal_fov>1.152</horizontal_fov>
                 <image>
                     <format>R8G8B8</format>
                     <width>640</width>
@@ -42,4 +48,49 @@
             <gz_frame_id>camera_link_optical</gz_frame_id>
         </sensor>
     </gazebo>
+
+    <!-- ===== Kinect na maszcie, pod lidarem, przed masztem =====
+    Tylna scianka Kinecta przy przedniej scianie masztu (x = -0.180), srodek x = -0.145, z = 0.38. -->
+
+    <joint name="kinect_joint" type="fixed">
+        <parent link="base_link"/>
+        <child link="kinect_link"/>
+        <origin xyz="-0.145 0 0.380" rpy="0 0 0"/>
+    </joint>
+
+    <link name="kinect_link">
+        <visual>
+            <geometry>
+                <box size="0.070 0.280 0.065"/>
+            </geometry>
+            <material name="black"/>
+        </visual>
+
+        <collision>
+            <geometry>
+                <box size="0.070 0.280 0.065"/>
+            </geometry>
+        </collision>
+
+        <xacro:inertial_box mass="0.43" x="0.070" y="0.280" z="0.065">
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+        </xacro:inertial_box>
+    </link>
+
+    <joint name="kinect_rgb_joint" type="fixed">
+        <parent link="kinect_link"/>
+        <child link="kinect_rgb"/>
+        <origin xyz="0.035 0 0" rpy="${-pi/2} 0 ${-pi/2}"/>
+    </joint>
+
+    <link name="kinect_rgb"></link>
+
+    <joint name="kinect_depth_joint" type="fixed">
+        <parent link="kinect_rgb"/>
+        <child link="kinect_depth"/>
+        <origin xyz="0.025 0 0" rpy="0 0 0"/>
+    </joint>
+
+    <link name="kinect_depth"></link>
+
 </robot>

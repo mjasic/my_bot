@@ -102,7 +102,7 @@ controller_server:
       regulated_linear_scaling_min_radius: 0.9
       regulated_linear_scaling_min_speed: 0.15
       use_rotate_to_heading: true
-      rotate_to_heading_min_angle: 0.35
+      rotate_to_heading_min_angle: 0.6
       max_linear_accel: 2.0
       max_linear_decel: 2.0
       min_turning_radius: 0.0
@@ -328,11 +328,17 @@ docking_server:
     dock_backwards: false
     dock_prestaging_tolerance: 0.5
 
+    docks: ['home_dock']
+    home_dock:
+      type: 'simple_charging_dock'
+      frame: map
+      pose: [0.678, -0.081, -0.646]
+
     dock_plugins: ['simple_charging_dock']
     simple_charging_dock:
       plugin: 'opennav_docking::SimpleChargingDock'
       docking_threshold: 0.05
-      staging_x_offset: -0.7
+      staging_x_offset: -0.5
       use_external_detection_pose: true
       use_battery_status: false
       use_stall_detection: false

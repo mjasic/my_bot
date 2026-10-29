@@ -1,6 +1,15 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
 
+    <!--
+    UKLAD ODNIESIENIA - base_link lezy na podlozu, dokladnie pod srodkiem osi kol napedowych.
+    x do przodu, y w lewo, z w gore. Wszystkie wymiary w metrach.
+    Wymiary robota (zmierzone)
+      kola 0.090 m srednicy, 0.022 m szerokosci, rozstaw 0.289 m
+      podwozie 0.530 x 0.326 x 0.080, przeswit 0.020
+      castery +/-0.180 m od osi, masa calego robota 6 kg
+    -->
+
     <xacro:include filename="inertial_macros.xacro"/>
 
     <material name="white">
@@ -23,16 +32,13 @@
         <color rgba="1 0 0 1"/>
     </material>
 
+    <material name="grey">
+        <color rgba="0.5 0.5 0.5 1"/>
+    </material>
+
     <!-- Base link -->
 
     <link name="base_link"/>
-    
-
-    <joint name="chassis_joint" type="fixed">
-        <parent link="base_link"/>
-        <child link="chassis"/>
-        <origin xyz="-0.1 0 0"/>
-    </joint>
 
     <!-- Base footprint -->
 
@@ -44,64 +50,65 @@
 
     <link name="base_footprint"/>
 
+    <!-- Chassis - srodek podwozia lezy nad osia kol, 0.060 m nad podlozem (spod 0.020, gora 0.100) -->
+
+    <joint name="chassis_joint" type="fixed">
+        <parent link="base_link"/>
+        <child link="chassis"/>
+        <origin xyz="0 0 0.060"/>
+    </joint>
+
     <link name="chassis">
         <visual>
-            <origin xyz="0.15 0 0.125"/>
             <geometry>
-                <box size="0.3 0.3 0.15"/>
+                <box size="0.530 0.326 0.080"/>
             </geometry>
             <material name="white"/>
         </visual>
 
         <collision>
-            <origin xyz="0.15 0 0.125"/>
             <geometry>
-                <box size="0.3 0.3 0.15"/>
+                <box size="0.530 0.326 0.080"/>
             </geometry>
         </collision>
 
-        <xacro:inertial_box mass="0.5" x="0.3" y="0.3" z="0.15">
-            <origin xyz="0.15 0 0.125" rpy="0 0 0"/>
+        <!-- 4.85 kg - podwozie z akumulatorem, RPi, elektronika (6 kg calosc minus pozostale elementy) -->
+        <xacro:inertial_box mass="4.85" x="0.530" y="0.326" z="0.080">
+            <origin xyz="0 0 0" rpy="0 0 0"/>
         </xacro:inertial_box>
-
     </link>
-
-    
-    <gazebo reference="chassis">
-        <material>Gazebo/White</material>
-    </gazebo>
 
     <!-- Left wheel -->
 
     <joint name="left_wheel_joint" type="continuous">
         <parent link="base_link"/>
         <child link="left_wheel"/>
-        <origin xyz="0 0.125 0.0333" rpy="-1.5708 0 0"/>
+        <origin xyz="0 0.1445 0.045" rpy="-1.5708 0 0"/>
         <axis xyz="0 0 1"/>
     </joint>
 
     <link name="left_wheel">
         <visual>
             <geometry>
-                <cylinder radius="0.0333" length="0.04"/>
+                <cylinder radius="0.045" length="0.022"/>
             </geometry>
             <material name="blue"/>
         </visual>
 
         <collision>
             <geometry>
-                <sphere radius="0.0333"/>
+                <sphere radius="0.045"/>
             </geometry>
         </collision>
 
-        <xacro:inertial_cylinder mass="0.1" length="0.04" radius="0.0333">
+        <xacro:inertial_cylinder mass="0.15" length="0.022" radius="0.045">
             <origin xyz="0 0 0" rpy="0 0 0"/>
         </xacro:inertial_cylinder>
-
     </link>
 
     <gazebo reference="left_wheel">
-        <material>Gazebo/Blue</material>
+        <mu1>1.0</mu1>
+        <mu2>1.0</mu2>
     </gazebo>
 
     <!-- Right wheel -->
@@ -109,66 +116,130 @@
     <joint name="right_wheel_joint" type="continuous">
         <parent link="base_link"/>
         <child link="right_wheel"/>
-        <origin xyz="0 -0.125 0.0333" rpy="1.5708 0 0"/>
+        <origin xyz="0 -0.1445 0.045" rpy="1.5708 0 0"/>
         <axis xyz="0 0 -1"/>
     </joint>
 
     <link name="right_wheel">
         <visual>
             <geometry>
-                <cylinder radius="0.0333" length="0.04"/>
+                <cylinder radius="0.045" length="0.022"/>
             </geometry>
             <material name="blue"/>
         </visual>
 
         <collision>
             <geometry>
-                <sphere radius="0.0333"/>
+                <sphere radius="0.045"/>
             </geometry>
         </collision>
 
-        <xacro:inertial_cylinder mass="0.1" length="0.04" radius="0.0333">
+        <xacro:inertial_cylinder mass="0.15" length="0.022" radius="0.045">
             <origin xyz="0 0 0" rpy="0 0 0"/>
         </xacro:inertial_cylinder>
-
     </link>
 
     <gazebo reference="right_wheel">
-        <material>Gazebo/Blue</material>
+        <mu1>1.0</mu1>
+        <mu2>1.0</mu2>
     </gazebo>
 
-    <!-- Caster wheel -->
+    <!--
+    Castery (przedni i tylny) - kulki o promieniu 0.020 m.
+    Srodek kulki jest 0.5 mm powyzej "idealnego" kontaktu z podlozem, wiec
+    robot opiera sie na kolach napedowych (maja lepszy kontakt), a castery
+    tylko podtrzymuja go przy przechyle. Tarcie praktycznie zerowe.
+    -->
 
-    <joint name="caster_wheel_joint" type="fixed">
-        <parent link="chassis"/>
-        <child link="caster_wheel"/>
-        <origin xyz="0.24 0 0.0333"/>
+    <joint name="front_caster_joint" type="fixed">
+        <parent link="base_link"/>
+        <child link="front_caster"/>
+        <origin xyz="0.180 0 0.0205"/>
     </joint>
 
-    <link name="caster_wheel">
+    <link name="front_caster">
         <visual>
             <geometry>
-                <sphere radius="0.0333"/>
+                <sphere radius="0.020"/>
             </geometry>
             <material name="black"/>
         </visual>
 
         <collision>
             <geometry>
-                <sphere radius="0.0333"/>
+                <sphere radius="0.020"/>
             </geometry>
         </collision>
 
-        <xacro:inertial_sphere mass="0.1" radius="0.0333">
+        <xacro:inertial_sphere mass="0.05" radius="0.020">
             <origin xyz="0 0 0" rpy="0 0 0"/>
         </xacro:inertial_sphere>
-
     </link>
 
-    <gazebo reference="caster_wheel">
-        <material>Gazebo/Black</material>
-        <mu1 value="0.001"/>
-        <mu2 value="0.001"/>
+    <gazebo reference="front_caster">
+        <mu1>0.001</mu1>
+        <mu2>0.001</mu2>
     </gazebo>
+
+    <joint name="rear_caster_joint" type="fixed">
+        <parent link="base_link"/>
+        <child link="rear_caster"/>
+        <origin xyz="-0.180 0 0.0205"/>
+    </joint>
+
+    <link name="rear_caster">
+        <visual>
+            <geometry>
+                <sphere radius="0.020"/>
+            </geometry>
+            <material name="black"/>
+        </visual>
+
+        <collision>
+            <geometry>
+                <sphere radius="0.020"/>
+            </geometry>
+        </collision>
+
+        <xacro:inertial_sphere mass="0.05" radius="0.020">
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+        </xacro:inertial_sphere>
+    </link>
+
+    <gazebo reference="rear_caster">
+        <mu1>0.001</mu1>
+        <mu2>0.001</mu2>
+    </gazebo>
+
+    <!--
+    Maszt na tyle robota - 60 mm (x) x 40 mm (y), dlugosc 0.360 m.
+    Dol 0.055 m (schowany w podwoziu), gora 0.415 m. Srodek x = -0.210.
+    Na szczycie stoi lidar, nizej Kinect.
+    -->
+
+    <joint name="mast_joint" type="fixed">
+        <parent link="base_link"/>
+        <child link="mast"/>
+        <origin xyz="-0.210 0 0.235"/>
+    </joint>
+
+    <link name="mast">
+        <visual>
+            <geometry>
+                <box size="0.060 0.040 0.360"/>
+            </geometry>
+            <material name="grey"/>
+        </visual>
+
+        <collision>
+            <geometry>
+                <box size="0.060 0.040 0.360"/>
+            </geometry>
+        </collision>
+
+        <xacro:inertial_box mass="0.15" x="0.060" y="0.040" z="0.360">
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+        </xacro:inertial_box>
+    </link>
 
 </robot>
