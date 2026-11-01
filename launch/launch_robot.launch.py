@@ -45,7 +45,7 @@ def generate_launch_description():
     diff_drive_spawner = Node(
         package="controller_manager",
         executable="spawner",
-        arguments=["diff_cont"],
+        arguments=["diff_cont", "--param-file", os.path.join(get_package_share_directory(package_name), "config", "real_robot_overrides.yaml")],
     )
     delayed_diff_drive_spawner = RegisterEventHandler(
         event_handler=OnProcessStart(
