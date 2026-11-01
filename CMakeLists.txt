@@ -39,6 +39,7 @@ install(
 
 install(PROGRAMS
   scripts/detected_dock_pose_publisher.py
+  scripts/mpu6500_node.py
   DESTINATION lib/${PROJECT_NAME}
 )
 
