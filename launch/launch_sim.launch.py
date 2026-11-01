@@ -80,7 +80,6 @@ def generate_launch_description():
         arguments=[
             '/clock@rosgraph_msgs/msg/Clock[gz.msgs.Clock',
             '/cmd_vel@geometry_msgs/msg/Twist@gz.msgs.Twist',
-            '/odom@nav_msgs/msg/Odometry@gz.msgs.Odometry',
             '/tf@tf2_msgs/msg/TFMessage@gz.msgs.Pose_V',
             '/scan@sensor_msgs/msg/LaserScan@gz.msgs.LaserScan',
             '/world/empty/model/robot/joint_state@sensor_msgs/msg/JointState@gz.msgs.Model',
@@ -178,7 +177,7 @@ def generate_launch_description():
     diff_drive_spawner = Node(
         package='controller_manager',
         executable='spawner',
-        arguments=['diff_cont']
+        arguments=['diff_cont', '--controller-ros-args', '-r /diff_cont/odom:=/odom']
     )
 
     joint_broad_spawner = Node(

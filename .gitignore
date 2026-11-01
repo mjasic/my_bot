@@ -6,3 +6,5 @@ log/
 *.gv
 *.pdf
 **/__pycache__/
+*.bak*
+__pycache__/
