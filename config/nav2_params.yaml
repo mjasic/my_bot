@@ -320,7 +320,7 @@ docking_server:
     enable_stamped_cmd_vel: true
     initial_perception_timeout: 5.0
     wait_charge_timeout: 5.0
-    dock_approach_timeout: 30.0
+    dock_approach_timeout: 60.0
     undock_linear_tolerance: 0.05
     undock_angular_tolerance: 0.1
     max_retries: 3
@@ -339,7 +339,7 @@ docking_server:
     simple_charging_dock:
       plugin: 'opennav_docking::SimpleChargingDock'
       docking_threshold:  0.08
-      staging_x_offset: -0.40
+      staging_x_offset: -1.0
       use_external_detection_pose: true
       use_battery_status: false
       use_stall_detection: false
