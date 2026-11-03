@@ -84,9 +84,12 @@ controller_server:
       primary_controller: "nav2_regulated_pure_pursuit_controller::RegulatedPurePursuitController"
       angular_dist_threshold: 0.5
       angular_disengage_threshold: 0.25
+      # Shim sam obraca robota do kierunku celu - bez tego Shim i RPP
+      # walcza o sterowanie przy obrocie na koncu trasy (oscylacje)
+      rotate_to_goal_heading: true
       forward_sampling_distance: 0.5
-      rotate_to_heading_angular_vel: 1.2
-      max_angular_accel: 2.0
+      rotate_to_heading_angular_vel: 0.5
+      max_angular_accel: 2.5
       simulate_ahead_time: 1.0
       desired_linear_vel: 0.30
       lookahead_dist: 0.4
