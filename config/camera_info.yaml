@@ -1,16 +1,16 @@
-image_width: 640
-image_height: 480
-camera_name: imx708__base_axi_pcie_120000_rp1_i2c_80000_imx708_1a_640x480
+image_width: 768
+image_height: 432
+camera_name: imx708__base_axi_pcie_120000_rp1_i2c_80000_imx708_1a_768x432_2304x1296_RGGB_PISP_COMP1_RAW
 camera_matrix:
   rows: 3
   cols: 3
   data:
-  - 970.825238
+  - 574.372895
   - 0.0
-  - 431.487802
+  - 386.837004
   - 0.0
-  - 973.94194
-  - 218.538434
+  - 575.742933
+  - 200.244349
   - 0.0
   - 0.0
   - 1.0
@@ -19,10 +19,10 @@ distortion_coefficients:
   rows: 1
   cols: 5
   data:
-  - 0.013761
-  - 0.176258
-  - -0.005214
-  - 0.0005
+  - 0.052112
+  - -0.057719
+  - -0.006953
+  - 0.000989
   - 0.0
 rectification_matrix:
   rows: 3
@@ -41,13 +41,13 @@ projection_matrix:
   rows: 3
   cols: 4
   data:
-  - 970.825238
+  - 574.372895
   - 0.0
-  - 431.487802
+  - 386.837004
   - 0.0
   - 0.0
-  - 973.94194
-  - 218.538434
+  - 575.742933
+  - 200.244349
   - 0.0
   - 0.0
   - 0.0

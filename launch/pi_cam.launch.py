@@ -10,13 +10,20 @@ def generate_launch_description():
         executable='camera_node',
         output='screen',
         parameters=[{
-            'width': 640,
-            'height': 480,
+            # Pelna matryca (tryb 2304x1296, 16:9) -> ok. 66 st. w poziomie.
+            # 640x480 z trybu 1536x864 dawalo tylko ~36 st. i tag wypadal z kadru przy dokowaniu.
+            'sensor_mode': '2304:1296',
+            'width': 768,
+            'height': 432,
             'camera_info_url': 'file:///home/mjasic/ros2_ws/src/my_bot/config/camera_info.yaml',
             # Mniej danych w sieci: 15 klatek/s i mocniejsza kompresja JPEG
             'FrameDurationLimits': [66666, 66666],
             'jpeg_quality': 40,
             # Stala ostrosc (bez autofokusa); LensPosition w dioptriach, 1.5 = ok. 0.7 m
+            # Krotka stala ekspozycja 8 ms (wzmocnienie dalej auto) - przy auto ekspozycji
+            # tag rozmywal sie w obrocie 0.3 rad/s (3-6/18 detekcji zamiast 18/18)
+            'ExposureTimeMode': 1,
+            'ExposureTime': 8000,
             'AfMode': 0,
             'LensPosition': 1.5,
             'orientation': 180,

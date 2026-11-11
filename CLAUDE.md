@@ -20,7 +20,9 @@
 ## Docking na prawdziwym robocie (stan 2026-11-11)
 Dziala: DockRobot z `navigate_to_staging_pose: false` z ok. 70 cm od taga - SUCCEEDED w 7 s, blad boczny 1 mm.
 - Tag tag36h11 id 0, czarny kwadrat 80 mm, na wysokosci obiektywu. `config/apriltag.yaml`: `decimate: 2.0` (z 1.0 apriltag zjadal 77% rdzenia i przy przeciazonym Pi gubil detekcje).
-- Kalibracja kamery (szachownica 9x6, pole 25 mm, rms 0.24 px): fx ~971, cx ~431. Przesuniety cx jest prawdziwy (sprawdzone tagiem na wprost obiektywu). HFOV tylko ok. 36 st.
+- Kamera: `sensor_mode 2304:1296` (pelna matryca), 768x432, HFOV 67.5 st. (wczesniej 640x480 z trybu 1536x864 = tylko 36 st. i tag wypadal z kadru przy korekcie). Kalibracja szachownica 9x6/25 mm, rms 0.19 px, fx ~574.
+- Ekspozycja stala 8 ms (`ExposureTimeMode 1`, `ExposureTime 8000`, gain auto): przy auto ekspozycji w obrocie 0.3 rad/s tag byl wykrywany w 3-6/18 klatek, z 8 ms 18/18.
+- Robot na 70 cm od taga, dokowanie bez Nav2 dziala. Pelne z Nav2: dojazd do staging ok, dalsze proby po zmianie kamery.
 - Kamera w URDF: x 0.265, z 0.055 od base_link (base_link = podloga pod osia kol), zmierzone linijka.
 - `pi_cam.launch.py`: `frame_id: camera_link_optical` (domyslnie camera_ros daje `camera` i TF do taga nie powstaje) + `detected_dock_pose_publisher`. Uruchamiac `launch_robot.launch.py use_camera:=true`.
 - `nav2_params_real.yaml` docking: home_dock `[-0.618, -0.063, -1.597]` (real_map2), `external_detection_translation_x: -0.53` (oś kol 53 cm od taga, obiektyw 27 cm - blizej tag nie miesci sie w kadrze), `staging_x_offset: -0.45` (za dockiem ok. 1 m do sciany), `docking_threshold: 0.03`, `max_retries: 0` (retry cofa na slepo do staging - robot walil w sciany), `use_collision_detection: true`.
