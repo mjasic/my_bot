@@ -6,7 +6,8 @@
     <joint name="camera_joint" type="fixed">
         <parent link="base_link"/>
         <child link="camera_link"/>
-        <origin xyz="0.270 0 0.060" rpy="0 0 0"/>
+        <!-- Zmierzone linijka 2026-11-11 (+-1 cm) - obiektyw 26.5 cm przed osia kol, 5.5 cm nad podloga, na srodku -->
+        <origin xyz="0.265 0 0.055" rpy="0 0 0"/>
     </joint>
 
     <link name="camera_link">

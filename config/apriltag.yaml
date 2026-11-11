@@ -12,7 +12,7 @@
     max_hamming: 0
     detector:
       threads: 2
-      decimate: 1.0
+      decimate: 2.0  # odciazenie CPU Pi (tag 8 cm widoczny do >1 m)
       blur: 0.0
       refine: true
       sharpening: 0.25

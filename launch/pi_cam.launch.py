@@ -20,6 +20,9 @@ def generate_launch_description():
             'AfMode': 0,
             'LensPosition': 1.5,
             'orientation': 180,
+            # Ramka z URDF - bez tego obraz ma frame_id 'camera' i TF
+            # camera_link_optical -> dock_tag nie powstaje
+            'frame_id': 'camera_link_optical',
         }]
     )
 
@@ -37,7 +40,20 @@ def generate_launch_description():
         ],
     )
 
+    # Most TF (camera_link_optical -> dock_tag) -> /detected_dock_pose dla docking_server
+    dock_pose_node = Node(
+        package='my_bot',
+        executable='detected_dock_pose_publisher.py',
+        name='detected_dock_pose_publisher',
+        output='screen',
+        parameters=[{
+            'camera_frame': 'camera_link_optical',
+            'tag_frame': 'dock_tag',
+        }],
+    )
+
     return LaunchDescription([
         camera_node,
         apriltag_node,
+        dock_pose_node,
     ])

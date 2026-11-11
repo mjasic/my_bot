@@ -320,10 +320,10 @@ docking_server:
     enable_stamped_cmd_vel: true
     initial_perception_timeout: 5.0
     wait_charge_timeout: 5.0
-    dock_approach_timeout: 30.0
+    dock_approach_timeout: 60.0
     undock_linear_tolerance: 0.05
     undock_angular_tolerance: 0.1
-    max_retries: 3
+    max_retries: 0  # bez ponownych prob - przy zgubieniu taga robot cofal w sciane
     base_frame: "base_link"
     fixed_frame: "odom"
     dock_backwards: false
@@ -333,19 +333,19 @@ docking_server:
     home_dock:
       type: 'simple_charging_dock'
       frame: map
-      pose: [1.5, 0.2, 0.0]
+      pose: [-0.618, -0.063, -1.597]  # real_map2, zmierzone 2026-11-11 (robot zadokowany, obiektyw 27 cm od taga)
 
     dock_plugins: ['simple_charging_dock']
     simple_charging_dock:
       plugin: 'opennav_docking::SimpleChargingDock'
-      docking_threshold:  0.08
-      staging_x_offset: -0.40
+      docking_threshold: 0.03
+      staging_x_offset: -0.45  # za dockiem jest ok. 1 m miejsca do sciany
       use_external_detection_pose: true
       use_battery_status: false
       use_stall_detection: false
 
       external_detection_timeout: 1.0
-      external_detection_translation_x: -0.40
+      external_detection_translation_x: -0.53
       external_detection_translation_y: 0.0
       external_detection_rotation_roll: -1.57
       external_detection_rotation_pitch: 1.57
@@ -357,7 +357,7 @@ docking_server:
       k_delta: 2.0
       v_linear_min: 0.15
       v_linear_max: 0.15
-      use_collision_detection: false
+      use_collision_detection: true
       costmap_topic: "local_costmap/costmap_raw"
       footprint_topic: "local_costmap/published_footprint"
       transform_tolerance: 0.1
