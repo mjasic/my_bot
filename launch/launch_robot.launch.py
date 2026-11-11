@@ -45,7 +45,7 @@ def generate_launch_description():
     diff_drive_spawner = Node(
         package="controller_manager",
         executable="spawner",
-        arguments=["diff_cont"],
+        arguments=["diff_cont", "--param-file", os.path.join(get_package_share_directory(package_name), "config", "real_robot_overrides.yaml")],
     )
     delayed_diff_drive_spawner = RegisterEventHandler(
         event_handler=OnProcessStart(
@@ -111,6 +111,20 @@ def generate_launch_description():
         condition=IfCondition(use_kinect)
     )
 
+    lidar_toggle_node = Node(
+        package="my_bot",
+        executable="lidar_toggle.py",
+        name="lidar_toggle",
+        output="screen",
+    )
+
+    lift_joy_node = Node(
+        package="my_bot",
+        executable="lift_joy.py",
+        name="lift_joy",
+        output="screen",
+    )
+
     return LaunchDescription([
         use_camera_arg,
         use_kinect_arg,
@@ -124,4 +138,6 @@ def generate_launch_description():
         pi_cam,
         kinect,
         rplidar,
+        lidar_toggle_node,
+        lift_joy_node,
     ])
