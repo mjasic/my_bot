@@ -44,7 +44,7 @@ bt_navigator:
     robot_base_frame: base_link
     odom_topic: /odometry/filtered
     bt_loop_duration: 10
-    default_server_timeout: 20
+    default_server_timeout: 200  # 20 ms za malo na obciazonym Pi - planner nie zdazal potwierdzic celu
     wait_for_service_timeout: 1000
     action_server_result_timeout: 900.0
     navigators: ["navigate_to_pose", "navigate_through_poses"]
@@ -71,8 +71,10 @@ controller_server:
     enable_stamped_cmd_vel: true
 
     progress_checker:
-      plugin: "nav2_controller::SimpleProgressChecker"
+      # Pose: obrot w miejscu tez liczy sie jako postep (Simple dawal "Failed to make progress" przy obrocie przed dockiem)
+      plugin: "nav2_controller::PoseProgressChecker"
       required_movement_radius: 0.5
+      required_movement_angle: 0.5
       movement_time_allowance: 10.0
     general_goal_checker:
       stateful: True
@@ -83,6 +85,9 @@ controller_server:
       plugin: "nav2_rotation_shim_controller::RotationShimController"
       primary_controller: "nav2_regulated_pure_pursuit_controller::RegulatedPurePursuitController"
       angular_dist_threshold: 0.5
+      # Shim sam obraca robota do kierunku celu - bez tego Shim i RPP
+      # walcza o sterowanie przy obrocie na koncu trasy (oscylacje, potwierdzone na robocie 2026-11-11)
+      rotate_to_goal_heading: true
       forward_sampling_distance: 0.5
       rotate_to_heading_angular_vel: 0.5
       max_angular_accel: 10.0

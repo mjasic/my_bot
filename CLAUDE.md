@@ -17,12 +17,22 @@
 - Nie ustawiaj qos_overrides best_effort na raw - apriltag subskrybuje reliable i przestaje dostawac klatki.
 - Nav2 dockowanie wymaga swiezosci detekcji < external_detection_timeout (1.0 s).
 
+## Uruchamianie prawdziwego robota (Pi)
+1. `ros2 launch my_bot launch_robot.launch.py use_camera:=true`
+2. `ros2 launch my_bot nav_real.launch.py` (AMCL + map_server na real_map2 + Nav2, bond_timeout 10 s) i w ciagu ~60 s "2D Pose Estimate" w RViz, inaczej global_costmap nie wstanie.
+3. Dokowanie: `ros2 action send_goal /dock_robot nav2_msgs/action/DockRobot "{use_dock_id: true, dock_id: home_dock, navigate_to_staging_pose: true}"` - uruchamiac NA PI (nie z PC), wtedy zerwane Wi-Fi nie przerywa dokowania.
+- Na PC: RViz `config/nav.rviz`, pad: `ros2 run joy joy_node --ros-args --params-file config/joystick.yaml` + `ros2 run teleop_twist_joy teleop_node` (remap /cmd_vel -> /cmd_vel_joy). NIE `joystick.launch.py` - startuje drugi twist_mux.
+- Pad idzie przez Wi-Fi: przy zerwanym Wi-Fi robota nie da sie zatrzymac padem (twist_mux sam zatrzymuje po 0.5 s braku komend). Do rozwazenia: dongle pada w Pi.
+- Wi-Fi Pi: power save wylaczony (nmcli 802-11-wireless.powersave 2) - z wlaczonym lacze zrywalo sie na dziesiatki sekund.
+- Pi bez RTC: po starcie poczekac na `timedatectl` "System clock synchronized: yes" (ok. 1 min), inaczej TF na PC sie rozjezdza.
+
 ## Docking na prawdziwym robocie (stan 2026-11-11)
-Dziala: DockRobot z `navigate_to_staging_pose: false` z ok. 70 cm od taga - SUCCEEDED w 7 s, blad boczny 1 mm.
+Dziala pelne dokowanie z Nav2: z 1.6-1.9 m w 20-27 s, dokladnosc ok. 1 cm w odleglosci, 1-2 cm w bok.
+Poprawki Nav2 w `nav2_params_real.yaml` potrzebne do tego: `rotate_to_goal_heading: true` (bez tego oscylacje przy obrocie przed dockiem), `default_server_timeout: 200` (20 ms - planner nie zdazal potwierdzic celu na Pi, robot stal mimo zaplanowanej sciezki), `PoseProgressChecker` (obrot w miejscu liczy sie jako postep).
 - Tag tag36h11 id 0, czarny kwadrat 80 mm, na wysokosci obiektywu. `config/apriltag.yaml`: `decimate: 2.0` (z 1.0 apriltag zjadal 77% rdzenia i przy przeciazonym Pi gubil detekcje).
 - Kamera: `sensor_mode 2304:1296` (pelna matryca), 768x432, HFOV 67.5 st. (wczesniej 640x480 z trybu 1536x864 = tylko 36 st. i tag wypadal z kadru przy korekcie). Kalibracja szachownica 9x6/25 mm, rms 0.19 px, fx ~574.
 - Ekspozycja stala 8 ms (`ExposureTimeMode 1`, `ExposureTime 8000`, gain auto): przy auto ekspozycji w obrocie 0.3 rad/s tag byl wykrywany w 3-6/18 klatek, z 8 ms 18/18.
-- Robot na 70 cm od taga, dokowanie bez Nav2 dziala. Pelne z Nav2: dojazd do staging ok, dalsze proby po zmianie kamery.
+
 - Kamera w URDF: x 0.265, z 0.055 od base_link (base_link = podloga pod osia kol), zmierzone linijka.
 - `pi_cam.launch.py`: `frame_id: camera_link_optical` (domyslnie camera_ros daje `camera` i TF do taga nie powstaje) + `detected_dock_pose_publisher`. Uruchamiac `launch_robot.launch.py use_camera:=true`.
 - `nav2_params_real.yaml` docking: home_dock `[-0.618, -0.063, -1.597]` (real_map2), `external_detection_translation_x: -0.53` (oś kol 53 cm od taga, obiektyw 27 cm - blizej tag nie miesci sie w kadrze), `staging_x_offset: -0.45` (za dockiem ok. 1 m do sciany), `docking_threshold: 0.03`, `max_retries: 0` (retry cofa na slepo do staging - robot walil w sciany), `use_collision_detection: true`.
@@ -31,6 +41,7 @@ Dziala: DockRobot z `navigate_to_staging_pose: false` z ok. 70 cm od taga - SUCC
 Do zrobienia: pelne dokowanie z nawigacja do staging z drugiego konca pokoju; ewentualnie stacja ladowania (use_battery_status).
 
 ## Znane drobiazgi
+- IMU MPU-6500 na I2C (Pi piny 1 3.3V, 3 SDA, 5 SCL, 6 GND, adres 0x68). NCS musi byc podpiety do 3.3 V, inaczej IMU nie pojawia sie na I2C. Luzny kabel IMU = smieciowy zyroskop w EKF = AMCL sie gubi (2026-11-11). Diagnoza: `i2cdetect -y 1`, w logu "Blad odczytu I2C". Po ponownym podlaczeniu zrestartowac wezel IMU (kalibracja zyroskopu, robot nieruchomo).
 - W symulacji `max_angular_accel` powinno byc 2.5 (10.0 powodowalo telepanie przy przeciazonym PC); na prawdziwym robocie 10.0 jest OK. Sprawdz `grep max_angular_accel config/nav2_params*.yaml`.
 - Telepanie przy obrocie w miejscu w sim bylo skutkiem przeciazenia PC (petla ~7,7 Hz), nie bledu parametrow.
 - Pi nie ma RTC, czas z NTP.
