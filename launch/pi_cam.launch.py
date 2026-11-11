@@ -13,6 +13,13 @@ def generate_launch_description():
             'width': 640,
             'height': 480,
             'camera_info_url': 'file:///home/mjasic/ros2_ws/src/my_bot/config/camera_info.yaml',
+            # Mniej danych w sieci: 15 klatek/s i mocniejsza kompresja JPEG
+            'FrameDurationLimits': [66666, 66666],
+            'jpeg_quality': 40,
+            # Stala ostrosc (bez autofokusa); LensPosition w dioptriach, 1.5 = ok. 0.7 m
+            'AfMode': 0,
+            'LensPosition': 1.5,
+            'orientation': 180,
         }]
     )
 

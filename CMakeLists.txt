@@ -40,6 +40,8 @@ install(
 install(PROGRAMS
   scripts/detected_dock_pose_publisher.py
   scripts/mpu6500_node.py
+  scripts/lidar_toggle.py
+  scripts/lift_joy.py
   DESTINATION lib/${PROJECT_NAME}
 )
 

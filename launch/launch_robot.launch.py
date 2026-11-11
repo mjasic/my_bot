@@ -111,6 +111,20 @@ def generate_launch_description():
         condition=IfCondition(use_kinect)
     )
 
+    lidar_toggle_node = Node(
+        package="my_bot",
+        executable="lidar_toggle.py",
+        name="lidar_toggle",
+        output="screen",
+    )
+
+    lift_joy_node = Node(
+        package="my_bot",
+        executable="lift_joy.py",
+        name="lift_joy",
+        output="screen",
+    )
+
     return LaunchDescription([
         use_camera_arg,
         use_kinect_arg,
@@ -124,4 +138,6 @@ def generate_launch_description():
         pi_cam,
         kinect,
         rplidar,
+        lidar_toggle_node,
+        lift_joy_node,
     ])

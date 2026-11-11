@@ -85,7 +85,7 @@ controller_server:
       angular_dist_threshold: 0.5
       forward_sampling_distance: 0.5
       rotate_to_heading_angular_vel: 0.5
-      max_angular_accel: 2.5
+      max_angular_accel: 10.0
       simulate_ahead_time: 1.0
       desired_linear_vel: 0.30
       lookahead_dist: 0.4
