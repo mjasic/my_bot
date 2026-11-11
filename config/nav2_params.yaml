@@ -83,6 +83,9 @@ controller_server:
       plugin: "nav2_rotation_shim_controller::RotationShimController"
       primary_controller: "nav2_regulated_pure_pursuit_controller::RegulatedPurePursuitController"
       angular_dist_threshold: 0.5
+      # Shim sam obraca robota do kierunku celu - bez tego Shim i RPP
+      # walcza o sterowanie przy obrocie na koncu trasy (oscylacje)
+      rotate_to_goal_heading: true
       forward_sampling_distance: 0.5
       rotate_to_heading_angular_vel: 0.5
       max_angular_accel: 2.5
@@ -320,7 +323,7 @@ docking_server:
     enable_stamped_cmd_vel: true
     initial_perception_timeout: 5.0
     wait_charge_timeout: 5.0
-    dock_approach_timeout: 30.0
+    dock_approach_timeout: 60.0
     undock_linear_tolerance: 0.05
     undock_angular_tolerance: 0.1
     max_retries: 3
@@ -339,7 +342,7 @@ docking_server:
     simple_charging_dock:
       plugin: 'opennav_docking::SimpleChargingDock'
       docking_threshold:  0.08
-      staging_x_offset: -0.40
+      staging_x_offset: -1.0
       use_external_detection_pose: true
       use_battery_status: false
       use_stall_detection: false
